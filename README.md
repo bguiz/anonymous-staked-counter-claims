@@ -35,6 +35,13 @@
     - The counter-claiming actor receives both staked amounts -
       which is a net profit to incentivise accurate counter-claims
 
+## Desired outcomes
+
+- Financial disincentives to report inaccurate data
+- Improve overall accuracy of data reporting by members of a consortium
+- Allow counter-claims to be made anonymously,
+  thereby avoiding threat of retribution by the claiming actor
+
 ## UML sequence diagram
 
 ![Sequence diagram for anonymous staked counter-claims to incentivise accurate data reporting](anonymous-staked-counter-claims-sequence-diagram.plantuml.png)
