@@ -1,0 +1,63 @@
+@startuml
+
+title "Anonymous staked counter-claims to incentivise accurate data reporting"
+
+actor "Claimer\nconsortium member" as S
+actor "Non-claimer\nconsortium member" as O
+entity "Consortium" as C
+actor "External\nnon-consortium member" as E
+actor "Auditor\nnon-consortium member" as A
+
+== Initialise consortium ==
+
+S -> C : Join request
+O -> C : Join request
+S -> C : Vote on config
+O -> C : Vote on config
+C -> S : Created notification
+C -> O : Created notification
+
+== Claim submitted,\nno counter-claim ==
+
+S -> C : Submit claim + stake A
+C -> C : Idle,\nresulting in time out
+C -> S : Return stake A
+
+== Claim submitted,\ncounter-claim by consortium member ==
+
+S -> C : Submit claim + stake A
+C -> C : Idle,\nbut something happens before time out
+O -> C : Submit counter-claim + stake B
+C -> A : Request for independent audit
+alt claim found valid
+    A -> C : Positive claim validation
+    C -> S : Return stake A + additional stake B
+else claim found invalid
+    A -> C : Negative claim validation
+    C -> O : Return stake B + additional stake A
+end
+
+== Claim submitted,\ncounter-claim by consortium non-member ==
+
+S -> C : Submit claim + stake A
+C -> C : Idle,\nbut something happens before time out
+E -> C : Submit counter-claim + stake B
+alt unable to find relayer
+    C -> C : Idle,\nresulting in time out
+    C -> S : Return stake A
+    C -> E : Return stake B
+else able to find relayer
+    C -> C : Idle,\nbut something happens before time out
+    O -> C : Relay counter-claim
+    alt claim found valid
+        A -> C : Positive claim validation
+        C -> S : Return stake A + additional stake B
+    else claim found invalid
+        A -> C : Negative claim validation
+        C -> O : Return stake B + additional stake A
+    end
+end
+
+@enduml
+
+' bguiz 20200304
